@@ -62,4 +62,4 @@ async def init(bot, img_cache, global_bucket):
             text = global_bucket[chat_id].parse()
             await post_order(bot, global_bucket[chat_id], chat_id, first_name)
             await event.delete()
-            await event.respond("Готово! Очікуйте замовлення найближчим часом.")
+            await event.respond("Готово! Очікуйте замовлення найближчим часом.", buttons=buttons.main_menu)
