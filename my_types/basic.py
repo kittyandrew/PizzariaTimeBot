@@ -99,7 +99,7 @@ class Basket:
         result = result.replace("\n", "<br>")
         if chat:
             result += f"<code>Користувач:</code> <a href=\"https://t.me/{chat}\">{chat}</a><br>"
-        result += f"<code>Дата замовлення:</code> {self.order_time.strftime('%m/%d/%Y, %H:%M:%S')}"
+        result += f"<code>Дата замовлення:</code> {self.order_time.strftime('%d/%m/%Y, %H:%M:%S')}"
         return result
 
     def __len__(self):
