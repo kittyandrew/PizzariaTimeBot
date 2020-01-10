@@ -76,13 +76,13 @@ async def init(bot, img_cache, global_bucket):
         await event.respond("Виберіть спосіб вводу контактів.", buttons=buttons.contacts_button)
 
     @bot.on(events.NewMessage(func=lambda x: x.text == "💳 Оплата на картку"))
-    async def in_cart(event: Event):
+    async def in_card(event: Event):
         try:
             basket = global_bucket[str(event.chat_id)]
         except:
             global_bucket[str(event.chat_id)] = Basket()
             basket = global_bucket[str(event.chat_id)]
-        await event.respond("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" * 20)
+        await event.respond("`Отримувач:`\nОлександр Андрійович\n`Картка:`\n5169360006344356")
         basket.payment_method = "на картку"
         await asyncio.sleep(3)
         await event.respond("Виберіть спосіб вводу контактів.", buttons=buttons.contacts_button)
@@ -138,7 +138,7 @@ async def init(bot, img_cache, global_bucket):
             global_bucket[str(event.chat_id)] = Basket()
             basket = global_bucket[str(event.chat_id)]
         basket.waiting_for_address = True
-        await event.respond("`Будь ласка, укажіть назву вулиці/номер будинку/під'їзд/квартиру`\nВаша адреса:", buttons=buttons.wait_for_input)
+        await event.respond("Ваша адреса:\n`Будь ласка, укажіть назву вулиці/номер будинку/під'їзд/квартиру`", buttons=buttons.wait_for_input)
         raise events.StopPropagation()
 
     # Global msg reader
