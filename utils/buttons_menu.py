@@ -1,8 +1,26 @@
 from telethon import Button
+from products.pizzas import *
 
 class buttons:
-    main_menu = [[Button.text("Піца", resize=True, single_use=True), Button.text("Соуси"), Button.text("Напої")],
-                 [Button.text("Перевірити кошик"), Button.text("Оформити замовлення")]]
+    main_menu = [[Button.text("🍕 Піца", resize=True, single_use=True), Button.text("🍕 Піца з половинок")],
+                  [Button.text("🍲 Соуси"), Button.text("🥤 Напої")],
+                 [Button.text("🛒 Перевірити кошик"), Button.text("📋 Оформити замовлення")]]
+
+    @staticmethod
+    def halfs_menu(single_click = False):
+        if single_click:
+            btn = Button.text(HalfNizhna.name, resize=True, single_use=True)
+        else:
+            btn = Button.text(HalfNizhna.name, resize=True, selective=True)
+        return [[ btn,
+                   Button.text(HalfApetitna.name),
+                   Button.text(HalfSitna.name)],
+               [Button.text(HalfSalyami.name),
+                   Button.text(HalfSokovita.name),
+                   Button.text(HalfFourChese.name)],
+               [Button.text(HalfPikantna.name),
+                   Button.text(HalfFourMeat.name),
+                   Button.text("↪ Меню")]]
 
     @staticmethod
     def products_menu(previous, chat_id, next, curr_index, product_type = None):
@@ -18,6 +36,8 @@ class buttons:
                        Button.request_phone("Використати телефон аккаунтa")]
 
     wait_for_input = Button.force_reply()
+
+    clear = Button.clear()
 
     @staticmethod
     def accept_order(chat_id, first_name):

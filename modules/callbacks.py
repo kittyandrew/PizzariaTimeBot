@@ -7,17 +7,34 @@ from telethon import events, Button
 import config as c
 import logging
 import asyncio
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 lists = {"pizza": pizzas_list,
          "drinks": drinks_list,
          "sauces": sauces_list}
 
+server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+server.login(c.LOGIN, c.PASSWORD)
+
 async def post_order(bot, basket, user_id, chat):
     text = basket.parse_finally(user_id, chat)
-    await bot.send_message(c.CHANNEL_ID, text,
-                           parse_mode="html",
-                           link_preview=False)
-    basket = Basket()
+    email = MIMEMultipart('alternative')
+    email["Subject"] = "Нове замовлення"
+    email['From'] = c.LOGIN
+    email['To'] = c.TARGET
+    email_text = f"""\
+<html>
+  <head></head>
+  <body>
+  {text}
+    </body>
+</html>
+"""
+    email.attach(MIMEText(email_text, "html"))
+    # Sending via mail
+    server.sendmail(c.LOGIN, c.TARGET, email.as_string())
 
 async def init(bot, img_cache, global_bucket):
     @bot.on(events.CallbackQuery)
@@ -62,4 +79,5 @@ async def init(bot, img_cache, global_bucket):
             text = global_bucket[chat_id].parse()
             await post_order(bot, global_bucket[chat_id], chat_id, first_name)
             await event.delete()
-            await event.respond("Готово! Очікуйте замовлення найближчим часом.", buttons=buttons.main_menu)
+            await event.respond("🎉 Готово! Очікуйте замовлення найближчим часом.", buttons=buttons.main_menu)
+            global_bucket[chat_id] = Basket()

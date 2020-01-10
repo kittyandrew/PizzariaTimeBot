@@ -83,3 +83,52 @@ class PikantnaPizza(BasePizza):
 
 pizzas_list = [NizhnaPizza, SitnaPizza, FourMeatPizza, SokovitaPizza,
                FourCheesePizza, SalyamiPizza, ApetitnaPizza, PikantnaPizza]
+
+class FullHalfPizza:
+    def __init__(self, obj1, obj2):
+        self.name = f"піца {obj1.name}|{obj2.name}"
+        self.price = str(int(obj1.price.strip("₴")) + int(obj2.price.strip("₴"))) + "₴"
+
+class HalfPizza:
+    name = None
+    half = None
+    price = None
+
+    def __add__(self, other):
+        return FullHalfPizza(self, other)
+
+class HalfNizhna(HalfPizza):
+    name = "0.5 \"Ніжна\""
+    price = "79₴"
+
+class HalfSitna(HalfPizza):
+    name = "0.5 \"Ситна\""
+    price = "87₴"
+
+class HalfFourMeat(HalfPizza):
+    name = "0.5 \"4 М'яса\""
+    price = "95₴"
+
+class HalfSokovita(HalfPizza):
+    name = "0.5 \"Соковита\""
+    price = "78₴"
+
+class HalfPikantna(HalfPizza):
+    name = "0.5 \"Пікантна\""
+    price = "80₴"
+
+class HalfApetitna(HalfPizza):
+    name = "0.5 \"Апетитна\""
+    price = "80₴"
+
+class HalfSalyami(HalfPizza):
+    name = "0.5 \"Салямі\""
+    price = "80₴"
+
+class HalfFourChese(HalfPizza):
+    name = "0.5 \"4 Сири\""
+    price = "90₴"
+
+
+halfs_pizzas = [HalfApetitna, HalfSalyami, HalfSitna, HalfSokovita,
+         HalfFourChese, HalfFourMeat, HalfPikantna, HalfNizhna]
