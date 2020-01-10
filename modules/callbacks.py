@@ -18,7 +18,21 @@ lists = {"pizza": pizzas_list,
 server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
 server.login(c.LOGIN, c.PASSWORD)
 
+def is_connected(conn):
+    try:
+        status = conn.noop()[0]
+    except:  # smtplib.SMTPServerDisconnected
+        status = -1
+    return True if status == 250 else False
+
+def ensure_connection():
+    global server
+    if not is_connected(server):
+        server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
+        server.login(c.LOGIN, c.PASSWORD)
+
 async def post_order(bot, basket, user_id, chat):
+    ensure_connection()
     basket.set_order_time()
     text = basket.parse_finally(user_id, chat)
     email = MIMEMultipart('alternative')
@@ -66,7 +80,7 @@ async def init(bot, img_cache, global_bucket):
                                  file=_List[index]().img,
                                  buttons=buttons.products_menu(index - 1, event.chat_id, index + 1, index,
                                                                product_type))
-            raise e
+                raise e
 
         elif "choice" in data:
             *_, _chat_id, index = data.split("|")

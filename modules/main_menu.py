@@ -46,12 +46,20 @@ async def init(bot, img_cache, global_bucket):
 
     @bot.on(events.NewMessage(func=lambda x: x.text == "🛒 Перевірити кошик"))
     async def check_basket(event: Event):
-        basket = global_bucket[str(event.chat_id)]
+        try:
+            basket = global_bucket[str(event.chat_id)]
+        except:
+            global_bucket[str(event.chat_id)] = Basket()
+            basket = global_bucket[str(event.chat_id)]
         await event.respond(basket.parse_products(), buttons=buttons.main_menu)
 
     @bot.on(events.NewMessage(func=lambda x: x.text == "📋 Оформити замовлення"))
     async def ask_contacts(event: Event):
-        basket = global_bucket[str(event.chat_id)]
+        try:
+            basket = global_bucket[str(event.chat_id)]
+        except:
+            global_bucket[str(event.chat_id)] = Basket()
+            basket = global_bucket[str(event.chat_id)]
         if not len(basket):
             await event.respond("Ви не можете оформити порожнє замовлення..", buttons=buttons.main_menu)
             return
@@ -67,7 +75,11 @@ async def init(bot, img_cache, global_bucket):
 
     @bot.on(events.NewMessage(func=lambda x: any(x.text == item.name for item in halfs_pizzas)))
     async def waiting_part(event: Event):
-        basket = global_bucket[str(event.chat_id)]
+        try:
+            basket = global_bucket[str(event.chat_id)]
+        except:
+            global_bucket[str(event.chat_id)] = Basket()
+            basket = global_bucket[str(event.chat_id)]
         for item in halfs_pizzas:
             if item.name == event.text:
                 break
@@ -80,14 +92,22 @@ async def init(bot, img_cache, global_bucket):
 
     @bot.on(events.NewMessage(pattern="^Ввести номер телефону$"))
     async def ask_phone(event: Event):
-        basket = global_bucket[str(event.chat_id)]
+        try:
+            basket = global_bucket[str(event.chat_id)]
+        except:
+            global_bucket[str(event.chat_id)] = Basket()
+            basket = global_bucket[str(event.chat_id)]
         basket.waiting_for_contacts = True
         await event.respond("Ваш телефон:", buttons=buttons.wait_for_input)
         raise events.StopPropagation()
 
     @bot.on(events.NewMessage(pattern="^Ввести адресу$"))
     async def ask_address(event: Event):
-        basket = global_bucket[str(event.chat_id)]
+        try:
+            basket = global_bucket[str(event.chat_id)]
+        except:
+            global_bucket[str(event.chat_id)] = Basket()
+            basket = global_bucket[str(event.chat_id)]
         basket.waiting_for_address = True
         await event.respond("Ваша адреса:", buttons=buttons.wait_for_input)
         raise events.StopPropagation()
@@ -95,7 +115,11 @@ async def init(bot, img_cache, global_bucket):
     # Global msg reader
     @bot.on(events.NewMessage)
     async def listen_to_chat(event: Event):
-        basket = global_bucket[str(event.chat_id)]
+        try:
+            basket = global_bucket[str(event.chat_id)]
+        except:
+            global_bucket[str(event.chat_id)] = Basket()
+            basket = global_bucket[str(event.chat_id)]
         if basket.waiting_for_contacts:
             basket.add_contacts(event.text)
             basket.waiting_for_contacts = False
@@ -134,7 +158,11 @@ async def init(bot, img_cache, global_bucket):
     # Accept geo or phone num
     @bot.on(events.NewMessage(func=lambda x: any([x.contact, x.geo])))
     async def shared_data(event):
-        basket = global_bucket[str(event.chat_id)]
+        try:
+            basket = global_bucket[str(event.chat_id)]
+        except:
+            global_bucket[str(event.chat_id)] = Basket()
+            basket = global_bucket[str(event.chat_id)]
         if event.contact:
             basket.add_contacts(event.media.phone_number)
             await event.respond("Виберіть спосіб вводу адреси доставки.", buttons=buttons.address_buttons)
