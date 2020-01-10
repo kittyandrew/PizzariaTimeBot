@@ -1,6 +1,8 @@
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
 import datetime
+import pickle
+import os
 geolocator = Nominatim()
 
 class Basket:
@@ -16,6 +18,7 @@ class Basket:
         self.waiting_for_part = False
         self.first_half = None
         self.order_time = None
+        self.payment_method = None
 
     def set_part(self, part):
         if self.first_half is None:
@@ -86,6 +89,7 @@ class Basket:
             price += int(item.price.strip("₴")) * count
         result += "\n"
         result += f"<code>Ціна:</code> {price} грн.\n"
+        result += f"<code>Спосіб оплати:</code> {self.payment_method}\n"
         if self.need_extra_info:
             result += f"<code>Адреса:</code> {self.address}\n"
             result += f"<code>Точні дані:</code> {self.odd_address_info}\n"
@@ -105,4 +109,24 @@ class Basket:
     def __len__(self):
         return len(self.items)
 
+class Counter:
+    file_name = "counter.pickle"
+    def __init__(self):
+        self.load_state()
 
+    def load_state(self):
+        if os.path.exists(self.file_name):
+            with open(self.file_name, "rb") as _file:
+                self.counter = pickle.load(_file)
+        else:
+            self.counter = 0
+            self.save()
+
+    def save(self):
+        with open(self.file_name, "wb") as _file:
+            pickle.dump(self.counter, _file)
+
+    def get(self):
+        self.counter += 1
+        self.save()
+        return self.counter

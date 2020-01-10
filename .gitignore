@@ -14,5 +14,6 @@ Dockerfile
 config.py
 test-development/
 archived/
+*.pickle
 *.json
 logging.log

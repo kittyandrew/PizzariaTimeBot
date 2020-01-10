@@ -1,5 +1,5 @@
 from utils.buttons_menu import buttons
-from my_types.basic import Basket
+from my_types.basic import Basket, Counter
 from products.pizzas import *
 from products.drinks import *
 from products.sauces import *
@@ -14,6 +14,8 @@ from email.mime.text import MIMEText
 lists = {"pizza": pizzas_list,
          "drinks": drinks_list,
          "sauces": sauces_list}
+
+counter = Counter()
 
 server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
 server.login(c.LOGIN, c.PASSWORD)
@@ -36,7 +38,7 @@ async def post_order(bot, basket, user_id, chat):
     basket.set_order_time()
     text = basket.parse_finally(user_id, chat)
     email = MIMEMultipart('alternative')
-    email["Subject"] = "Нове замовлення"
+    email["Subject"] = f"Замовлення ботом #{counter.get()}"
     email['From'] = c.LOGIN
     email['To'] = c.TARGET
     email_text = f"""\

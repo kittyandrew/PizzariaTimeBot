@@ -63,6 +63,28 @@ async def init(bot, img_cache, global_bucket):
         if not len(basket):
             await event.respond("Ви не можете оформити порожнє замовлення..", buttons=buttons.main_menu)
             return
+        await event.respond("Виберіть спосіб оплати", buttons=buttons.payment_button)
+
+    @bot.on(events.NewMessage(func=lambda x: x.text == "💵 Оплата готівкою"))
+    async def in_cash(event: Event):
+        try:
+            basket = global_bucket[str(event.chat_id)]
+        except:
+            global_bucket[str(event.chat_id)] = Basket()
+            basket = global_bucket[str(event.chat_id)]
+        basket.payment_method = "готівкою"
+        await event.respond("Виберіть спосіб вводу контактів.", buttons=buttons.contacts_button)
+
+    @bot.on(events.NewMessage(func=lambda x: x.text == "💳 Оплата на картку"))
+    async def in_cart(event: Event):
+        try:
+            basket = global_bucket[str(event.chat_id)]
+        except:
+            global_bucket[str(event.chat_id)] = Basket()
+            basket = global_bucket[str(event.chat_id)]
+        await event.respond("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa" * 20)
+        basket.payment_method = "на картку"
+        await asyncio.sleep(3)
         await event.respond("Виберіть спосіб вводу контактів.", buttons=buttons.contacts_button)
 
     @bot.on(events.NewMessage(func=lambda x: x.text == "🍕 Піца з половинок"))
@@ -90,6 +112,13 @@ async def init(bot, img_cache, global_bucket):
             await event.respond("Піца з половинок додана до вашого кошика.\n**Головне меню**",
                                 buttons=buttons.main_menu)
 
+    @bot.on(events.NewMessage(func=lambda x: x.text == "📩 Контактна інформація"))
+    async def contacts(event: Event):
+        text = "Контактна інформація:\n`Тел.:` +380 96 744 222 4\n`Inst.:` pizzatimebc замовити в direct\n" \
+               "`Web.:` [www.pizzatime.com.ua](https://www.pizzatime.com.ua/)\n\nСпівпраця та пропозиції:\n" \
+               "`Email:` pizzatimebc.info@gmail.com"
+        await event.respond(text, link_preview=False, buttons=buttons.main_menu)
+
     @bot.on(events.NewMessage(pattern="^Ввести номер телефону$"))
     async def ask_phone(event: Event):
         try:
@@ -109,7 +138,7 @@ async def init(bot, img_cache, global_bucket):
             global_bucket[str(event.chat_id)] = Basket()
             basket = global_bucket[str(event.chat_id)]
         basket.waiting_for_address = True
-        await event.respond("Ваша адреса:", buttons=buttons.wait_for_input)
+        await event.respond("`Будь ласка, укажіть назву вулиці/номер будинку/під'їзд/квартиру`\nВаша адреса:", buttons=buttons.wait_for_input)
         raise events.StopPropagation()
 
     # Global msg reader
