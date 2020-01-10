@@ -50,7 +50,7 @@ class Basket:
 
     def set_order_time(self):
         tz = datetime.timezone(datetime.timedelta(hours=2))
-        self.order_time = datetime.now(tz)
+        self.order_time = datetime.datetime.now(tz)
 
     def is_ready(self):
         return all(self.address, self.contacts)
