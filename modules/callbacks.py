@@ -19,6 +19,7 @@ server = smtplib.SMTP_SSL('smtp.gmail.com', 465)
 server.login(c.LOGIN, c.PASSWORD)
 
 async def post_order(bot, basket, user_id, chat):
+    basket.set_order_time()
     text = basket.parse_finally(user_id, chat)
     email = MIMEMultipart('alternative')
     email["Subject"] = "Нове замовлення"

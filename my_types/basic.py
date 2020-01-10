@@ -1,5 +1,6 @@
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
+import datetime
 geolocator = Nominatim()
 
 class Basket:
@@ -14,6 +15,7 @@ class Basket:
         self.need_extra_info = False
         self.waiting_for_part = False
         self.first_half = None
+        self.order_time = None
 
     def set_part(self, part):
         if self.first_half is None:
@@ -45,6 +47,10 @@ class Basket:
 
     def add_odd_info(self, address):
         self.odd_address_info = address
+
+    def set_order_time(self):
+        tz = datetime.timezone(datetime.timedelta(hours=2))
+        self.order_time = datetime.now(tz)
 
     def is_ready(self):
         return all(self.address, self.contacts)
@@ -81,10 +87,10 @@ class Basket:
         result += "\n"
         result += f"<code>Ціна:</code> {price} грн.\n"
         if self.need_extra_info:
-            result += f"<code>Адреса доставки:</code> {self.address}\n"
+            result += f"<code>Адреса:</code> {self.address}\n"
             result += f"<code>Точні дані:</code> {self.odd_address_info}\n"
         else:
-            result += f"<code>Адреса доставки:</code> {self.address}\n"
+            result += f"<code>Адреса:</code> {self.address}\n"
         result += f"<code>Контактні дані:</code> {self.contacts}\n"
         return result
 
@@ -92,7 +98,8 @@ class Basket:
         result = self.parse()
         result = result.replace("\n", "<br>")
         if chat:
-            result += f"<code>Користувач:</code> <a href=\"https://t.me/{chat}\">{chat}</a>"
+            result += f"<code>Користувач:</code> <a href=\"https://t.me/{chat}\">{chat}</a><br>"
+        result += f"<code>Дата замовлення:</code> {self.order_time.strftime('%m/%d/%Y, %H:%M:%S')}"
         return result
 
     def __len__(self):
