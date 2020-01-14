@@ -126,7 +126,8 @@ async def init(bot, img_cache, global_bucket):
 
     @bot.on(events.NewMessage(func=lambda x: x.text == "📩 Контактна інформація"))
     async def contacts(event: Event):
-        text = "Контактна інформація:\n`Тел.:` +380 96 744 222 4\n`Inst.:` pizzatimebc замовити в direct\n" \
+        text = "Контактна інформація:\n`Тел.:` +380 96 744 222 4\n" \
+               "`Inst.:` [pizzatimebc](https://www.instagram.com/pizzatimebc/) замовити в direct\n" \
                "`Web.:` [www.pizzatime.com.ua](https://www.pizzatime.com.ua/)\n\nСпівпраця та пропозиції:\n" \
                "`Email:` pizzatimebc.info@gmail.com"
         await event.respond(text, link_preview=False, buttons=buttons.main_menu)
