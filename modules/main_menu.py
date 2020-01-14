@@ -82,7 +82,7 @@ async def init(bot, img_cache, global_bucket):
         except:
             global_bucket[str(event.chat_id)] = Basket()
             basket = global_bucket[str(event.chat_id)]
-        await event.respond("`Отримувач:`\nОлександр Андрійович\n`Картка:`\n5169360006344356")
+        await event.respond(f"`Сума до оплати:`\n{basket.price} грн.\n`Отримувач:`\nОлександр Андрійович\n`Картка:`\n5169360006344356")
         basket.payment_method = "на картку"
         await asyncio.sleep(3)
         await event.respond("Виберіть спосіб вводу контактів.", buttons=buttons.contacts_button)
@@ -90,6 +90,18 @@ async def init(bot, img_cache, global_bucket):
     @bot.on(events.NewMessage(func=lambda x: x.text == "🍕 Піца з половинок"))
     async def half_pizzas(event: Event):
         await event.respond("Оберіть дві половинки:", buttons=buttons.halfs_menu())
+
+    @bot.on(events.NewMessage(func=lambda x: x.text == "🍕 Конструктор піци 🍕"))
+    async def pizza_constructor(event: Event):
+        try:
+            basket = global_bucket[str(event.chat_id)]
+        except:
+            global_bucket[str(event.chat_id)] = Basket()
+            basket = global_bucket[str(event.chat_id)]
+        basket.set_pizza()
+        msg1, msg2 = basket.parse_pizza_from_scratch(0)
+        await event.respond(msg1)
+        await event.respond(msg2, buttons=buttons.pizza_from_scratch(19, event.chat_id, 1, 0, message_id=event.id))
 
     @bot.on(events.NewMessage(func=lambda x: x.text == "↪ Меню"))
     async def _main_menu(event: Event):

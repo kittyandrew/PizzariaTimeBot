@@ -64,6 +64,50 @@ async def init(bot, img_cache, global_bucket):
             await event.delete()
             text = "**Головне меню**"
             await event.respond(text, buttons=buttons.main_menu)
+        elif "back to main" in data:
+            await event.delete()
+            _id = data.split("|")[-1]
+            await bot.delete_messages(event.chat_id, int(_id) + 1)
+            text = "**Головне меню**"
+            await event.respond(text, buttons=buttons.main_menu)
+        elif "pizza is ready" in data:
+            bucket = global_bucket[data.split("|")[-1]]
+            bucket.accept_pizza()
+            msg_id = data.split("|")[-2]
+            await event.delete()
+            await bot.delete_messages(event.chat_id, int(msg_id) + 1)
+            await event.answer("Товар був доданий до вашого кошика")
+            text = "Піца додана до вашого кошика!\n**Головне меню**"
+            await event.respond(text, buttons=buttons.main_menu)
+        elif "i_prev" in data or "i_next" in data:
+            index = int(data.split("|")[-1])
+            msg_id = data.split("|")[-2]
+            if index < 0:
+                index = 19
+            elif index > 19:
+                index = 0
+            item, cost = Ingredient(index).show()
+            msg = f"`Вибір інгредієнтів {index + 1}/20`\n"
+            msg += f"`Назва:` {item}\n"
+            msg += f"`Ціна:` {cost}"
+            await event.edit(msg,
+                             buttons=buttons.pizza_from_scratch(index - 1,
+                                                                event.chat_id,
+                                                                index + 1,
+                                                                index,
+                                                                message_id=msg_id))
+        elif "ingredient" in data:
+            _, _msg_id, _chat_id, curr_index = data.split("|")
+            bucket = global_bucket[_chat_id]
+            bucket.add_ingredient(int(curr_index))
+            msg1, msg2 = bucket.parse_pizza_from_scratch(int(curr_index))
+            await bot.edit_message(int(_chat_id), int(_msg_id) + 1, msg1)
+            await event.edit(msg2,
+                             buttons=buttons.pizza_from_scratch(int(curr_index) - 1,
+                                                                event.chat_id,
+                                                                int(curr_index) + 1,
+                                                                int(curr_index),
+                                                                message_id=_msg_id))
         elif "previous" in data or "next" in data:
             index = int(data.split("|")[-1])
             if index < 0:

@@ -1,5 +1,7 @@
+from products.pizzas import PizzaFromScratch
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
+from typing import Union
 import datetime
 import pickle
 import os
@@ -19,6 +21,28 @@ class Basket:
         self.first_half = None
         self.order_time = None
         self.payment_method = None
+        self.pizza_from_scratch:PizzaFromScratch = None
+
+    def parse_pizza_from_scratch(self, index):
+        result1 = self.pizza_from_scratch.user_parse()
+        item, cost = self.pizza_from_scratch.show_item(index)
+        result2 = f"`Вибір інгредієнтів {index + 1}/20`\n"
+        result2 += f"`Назва:` {item}\n"
+        result2 += f"`Ціна:` {cost}"
+        return result1, result2
+
+    def set_pizza(self):
+        self.pizza_from_scratch = PizzaFromScratch()
+
+    def accept_pizza(self):
+        self.items.append(self.pizza_from_scratch)
+        self.pizza_from_scratch = PizzaFromScratch()
+
+    def add_ingredient(self, index):
+        return self.pizza_from_scratch.add(index)
+
+    def scrolled_item(self, index) -> Union[int, str, int]:
+        return self.pizza_from_scratch.item_with_idencies(index)
 
     def set_part(self, part):
         if self.first_half is None:
@@ -74,10 +98,13 @@ class Basket:
             result += f"{item.name} `×` {count} шт.\n"
         return result
 
-    def parse(self):
+    def parse(self, extra=False):
         price = 0
         _tmp = {}
         for each in self.items:
+            if extra:
+                if isinstance(each, PizzaFromScratch):
+                    continue
             _count = _tmp.get(each, None)
             if _count is None:
                 _tmp[each] = 1
@@ -85,10 +112,20 @@ class Basket:
                 _tmp[each] = _count + 1
         result = "<code>Замовлення:</code>\n"
         for item, count in _tmp.items():
-            result += f"{item.name} <code>×</code> {count} шт.\n"
-            price += int(item.price.strip("₴")) * count
+            result += f"<b>{item.name}</b> <code>×</code> <b>{count}</b> шт.\n"
+            if isinstance(item, PizzaFromScratch):
+                result += item.parse_ingredients()
+                price += item.price
+            else:
+                price += int(item.price.strip("₴")) * count
+        if extra:
+            for item in self.items:
+                if isinstance(item, PizzaFromScratch):
+                    result += f"<b>{item.name}</b> <code>×</code> <b>1 шт.</b>\n"
+                    result += item.parse_ingredients()
+                    price += item.price
         result += "\n"
-        result += f"<code>Ціна:</code> {price} грн.\n"
+        result += f"<code>Ціна:</code> {round(price, 1)} грн.\n"
         result += f"<code>Спосіб оплати:</code> {self.payment_method}\n"
         if self.need_extra_info:
             result += f"<code>Адреса:</code> {self.address}\n"
@@ -99,8 +136,9 @@ class Basket:
         return result
 
     def parse_finally(self, user_id, chat=None):
-        result = self.parse()
+        result = self.parse(extra=True)
         result = result.replace("\n", "<br>")
+        result = result.replace("    ", "&nbsp;&nbsp;&nbsp;&nbsp;")
         if chat:
             result += f"<code>Користувач:</code> <a href=\"https://t.me/{chat}\">{chat}</a><br>"
         result += f"<code>Дата замовлення:</code> {self.order_time.strftime('%d/%m/%Y, %H:%M:%S')}"
@@ -108,6 +146,16 @@ class Basket:
 
     def __len__(self):
         return len(self.items)
+
+    @property
+    def price(self):
+        result = 0
+        for item in self.items:
+            if isinstance(item, PizzaFromScratch):
+                result += item.price
+            else:
+                result += int(item.price.strip("₴"))
+        return round(result, 1)
 
 class Counter:
     file_name = "counter.pickle"

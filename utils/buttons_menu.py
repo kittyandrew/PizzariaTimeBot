@@ -3,7 +3,8 @@ from products.pizzas import *
 
 class buttons:
     main_menu = [[Button.text("🍕 Піца", resize=True, single_use=True), Button.text("🍕 Піца з половинок")],
-                  [Button.text("🍲 Соуси"), Button.text("🥤 Напої")],
+                 [Button.text("🍕 Конструктор піци 🍕")],
+                 [Button.text("🍲 Соуси"), Button.text("🥤 Напої")],
                  [Button.text("🛒 Перевірити кошик"), Button.text("📋 Оформити замовлення")],
                  [Button.text("📩 Контактна інформація")]]
 
@@ -29,6 +30,14 @@ class buttons:
                 Button.inline("↪ Меню", "back to main".encode("utf-8")),
                 Button.inline("➡ Наступна", f"{product_type}|next|{next}".encode("utf-8"))],
                 [Button.inline("🛒 В кошик", f"{product_type}|choice|{chat_id}|{curr_index}".encode("utf-8"))]]
+
+    @staticmethod
+    def pizza_from_scratch(previous, chat_id, next, curr_index, message_id = None):
+        return [[Button.inline("⬅", f"i_prev|{message_id}|{previous}".encode("utf-8")),
+                 Button.inline("↪ Меню", f"back to main|{message_id}".encode("utf-8")),
+                 Button.inline("➡", f"i_next|{message_id}|{next}".encode("utf-8"))],
+                [Button.inline("➕ Додати до піци", f"ingredient|{message_id}|{chat_id}|{curr_index}".encode("utf-8"))],
+                [Button.inline("✅ Додати в кошик", f"pizza is ready|{message_id}|{chat_id}")]]
 
     address_buttons = [Button.text("Ввести адресу", resize=True, single_use=True),
                        Button.request_location("Відправити геоданні")]
