@@ -99,6 +99,19 @@ async def init(bot, img_cache, global_bucket):
             global_bucket[str(event.chat_id)] = Basket()
             basket = global_bucket[str(event.chat_id)]
         basket.set_pizza()
+        await event.respond("Оберіть соус-основу для піци.", buttons=buttons.pizza_basement)
+
+    @bot.on(events.NewMessage(pattern=r"Томатний соус|Вершковий соус"))
+    async def pizza_constructor(event: Event):
+        try:
+            basket = global_bucket[str(event.chat_id)]
+        except:
+            global_bucket[str(event.chat_id)] = Basket()
+            basket = global_bucket[str(event.chat_id)]
+        if event.text == "Томатний соус":
+            basket.set_sauce("tomato")
+        elif event.text == "Вершковий соус":
+            basket.set_sauce("vershkovii")
         msg1, msg2 = basket.parse_pizza_from_scratch(0)
         await event.respond(msg1)
         await event.respond(msg2, buttons=buttons.pizza_from_scratch(19, event.chat_id, 1, 0, message_id=event.id))

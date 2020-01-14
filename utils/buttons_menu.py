@@ -48,6 +48,9 @@ class buttons:
     payment_button = [Button.text("💵 Оплата готівкою", resize=True, single_use=True),
                       Button.text("💳 Оплата на картку")]
 
+    pizza_basement = [Button.text("Томатний соус", resize=True, single_use=True),
+                      Button.text("Вершковий соус")]
+
     wait_for_input = Button.force_reply()
 
     clear = Button.clear()

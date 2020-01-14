@@ -185,12 +185,23 @@ class PizzaFromScratch:
     cost_tisto = 0.1 * 290
     cost_mozarela = 0.41 * 110
     cost_tomato_sauce = 0.15 * 100
-    pizza_base = "`Ваша піца:`\n  Тісто 290 г\n  Моцарела 110 г\n  Томатний соус 100 г\n"
+    tomato_sauce = "  Томатний соус 100 г\n"
+    cost_vershkovii_sauce = 0.15 * 100
+    vershkovii_sauce = "  Вершковий соус 100 г\n"
     null_text = "`(Додайте інгредієнти..)`"
 
     def __init__(self):
+        self.pizza_base = "`Ваша піца:`\n  Тісто 290 г\n  Моцарела 110 г\n"
         self.ingredients = list()
-        self.price = self.cost_tisto + self.cost_mozarela + self.cost_tomato_sauce
+        self.price = self.cost_tisto + self.cost_mozarela
+
+    def decide_sauce(self, sauce_type):
+        if sauce_type == "tomato":
+            self.pizza_base += self.tomato_sauce
+            self.price += self.cost_tomato_sauce
+        elif sauce_type == "vershkovii":
+            self.pizza_base += self.vershkovii_sauce
+            self.price += self.cost_vershkovii_sauce
 
     def add(self, index):
         new = True

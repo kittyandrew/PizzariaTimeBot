@@ -34,6 +34,9 @@ class Basket:
     def set_pizza(self):
         self.pizza_from_scratch = PizzaFromScratch()
 
+    def set_sauce(self, sauce_type):
+        self.pizza_from_scratch.decide_sauce(sauce_type)
+
     def accept_pizza(self):
         self.items.append(self.pizza_from_scratch)
         self.pizza_from_scratch = PizzaFromScratch()
