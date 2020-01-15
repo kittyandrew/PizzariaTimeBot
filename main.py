@@ -1,4 +1,3 @@
-from telethon.utils import pack_bot_file_id
 from products.pizzas import pizzas_list
 from products.drinks import drinks_list
 from products.sauces import sauces_list

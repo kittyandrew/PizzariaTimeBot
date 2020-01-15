@@ -42,13 +42,11 @@ async def post_order(bot, basket, user_id, chat):
     email['From'] = c.LOGIN
     email['To'] = c.TARGET
     email_text = f"""\
-<html>
-  <head></head>
-  <body>
-  {text}
-    </body>
-</html>
-"""
+                   <html>
+                   <head></head>
+                   <body>{text}</body>
+                   </html>\
+                   """
     email.attach(MIMEText(email_text, "html"))
     # Sending via mail
     server.sendmail(c.LOGIN, c.TARGET, email.as_string())
