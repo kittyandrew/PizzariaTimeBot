@@ -82,8 +82,15 @@ class PikantnaPizza(BasePizza):
     weight = "660г"
     img_path = os.path.join("media", "pizzas", "Pikantna.png")
 
+class NapoliPikantnaPizza(BasePizza):
+    name = "піца \"Наполі пікантна\""
+    ingredients = ["соус томатний", "сир моцарела", "ковбаса наполі пікантна", "перець болгарський жовтий", "оливки чорні"]
+    price = "170₴"
+    weight = "610г"
+    img_path = os.path.join("media", "pizzas", "Napoli.png")
+
 pizzas_list = [NizhnaPizza, SitnaPizza, FourMeatPizza, SokovitaPizza,
-               FourCheesePizza, SalyamiPizza, ApetitnaPizza, PikantnaPizza]
+               FourCheesePizza, SalyamiPizza, ApetitnaPizza, PikantnaPizza, NapoliPikantnaPizza]
 
 class FullHalfPizza:
     def __init__(self, obj1, obj2):
@@ -130,14 +137,17 @@ class HalfFourChese(HalfPizza):
     name = "0.5 \"4 Сири\""
     price = "90₴"
 
+class HalfNapoliPikantna(HalfPizza):
+    name = "0.5 \"Наполі пікантна\""
+    price = "85₴"
 
 halfs_pizzas = [HalfApetitna, HalfSalyami, HalfSitna, HalfSokovita,
-         HalfFourChese, HalfFourMeat, HalfPikantna, HalfNizhna]
+         HalfFourChese, HalfFourMeat, HalfPikantna, HalfNizhna, HalfNapoliPikantna]
 
 class Ingredient:
     _hryvnya = "₴"
     normal_grams = 50
-    item1, grams1, cost1 = "Пармезан", 25, 0.63
+    item1, grams1, cost1 = "Пармезан", 25, 0.65
     item2, cost2 = "Дорблю", 0.7
     item3, cost3 = "Оливки", 0.4
     item4, grams4, cost4 = "Кріп", 5, 0.5
@@ -145,23 +155,25 @@ class Ingredient:
     item6, cost6 = "Філе Куряче", 0.6
     item7, cost7 = "Ананаси", 0.26
     item8, cost8 = "Кукурудза", 0.16
-    item9, cost9 = "Бекон", 0.4
+    item9, cost9 = "Бекон", 0.45
     item10, cost10 = "Салямі", 0.65
     item11, cost11 = "Мисливські к.", 0.4
     item12, cost12 = "Помідори", 0.3
-    item13, cost13 = "Чедер", 0.47
-    item14, cost14 = "Балик", 0.6
+    item13, cost13 = "Чедер", 0.53
+    item14, cost14 = "Балик", 0.5
     item15, cost15 = "Сир фета", 0.42
     item16, cost16 = "Перець болгарський", 0.3
     item17, cost17 = "Огірок кислий", 0.18
     item18, cost18 = "Цибуля синя", 0.12
     item19, cost19 = "Перець чилі", 0.34
     item20, cost20 = "Сулугуні", 0.5
+    item21, cost21 = "Перець жовтий", 0.3
+    item22, cost22 = "Наполі пікантна", 0.8
     products = [item1, item2, item3, item4, item5, item6, item7, item8, item9, item10, item11,
-                item12, item13, item14, item15, item16, item17, item18, item19, item20]
+                item12, item13, item14, item15, item16, item17, item18, item19, item20, item21, item22]
     costs = [cost1, cost2, cost3, cost4, cost5, cost6, cost7, cost8, cost9, cost10, cost11,
-             cost12, cost13, cost14, cost15, cost16, cost17, cost18, cost19, cost20]
-    grams = [grams1] * 3 + [grams4] + [normal_grams] * 16
+             cost12, cost13, cost14, cost15, cost16, cost17, cost18, cost19, cost20, cost21, cost22]
+    grams = [grams1] * 3 + [grams4] + [normal_grams] * 18
 
     def __init__(self, index):
         self.id = index
@@ -184,24 +196,38 @@ class PizzaFromScratch:
     _hryvnya = "₴"
     cost_tisto = 0.1 * 290
     cost_mozarela = 0.41 * 110
+    mozarela_cheese = "Моцарела 110 г"
+    cost_sylygyni = 0.5 * 110
+    sylygyni_cheese = "Сулугуні 110 г"
     cost_tomato_sauce = 0.15 * 100
-    tomato_sauce = "  Томатний соус 100 г\n"
+    tomato_sauce = "Томатний соус 100 г"
     cost_vershkovii_sauce = 0.15 * 100
-    vershkovii_sauce = "  Вершковий соус 100 г\n"
-    null_text = "`(Додайте інгредієнти..)`"
+    vershkovii_sauce = "Вершковий соус 100 г"
+    null_text = "\n  `(Додайте інгредієнти..)`"
 
     def __init__(self):
-        self.pizza_base = "`Ваша піца:`\n  Тісто 290 г\n  Моцарела 110 г\n"
+        self.base_ingredients = ["Тісто 290 г", ]
+        self.pizza_base = "`Ваша піца:`\n  " + "\n  ".join(self.base_ingredients)
         self.ingredients = list()
-        self.price = self.cost_tisto + self.cost_mozarela
+        self.price = self.cost_tisto
 
     def decide_sauce(self, sauce_type):
         if sauce_type == "tomato":
-            self.pizza_base += self.tomato_sauce
+            self.base_ingredients.append(self.tomato_sauce)
             self.price += self.cost_tomato_sauce
         elif sauce_type == "vershkovii":
-            self.pizza_base += self.vershkovii_sauce
+            self.base_ingredients.append(self.vershkovii_sauce)
             self.price += self.cost_vershkovii_sauce
+        self.pizza_base = "`Ваша піца:`\n  " + "\n  ".join(self.base_ingredients)
+
+    def decide_cheese(self, cheese_type):
+        if cheese_type == "mozarella":
+            self.base_ingredients.append(self.mozarela_cheese)
+            self.price += self.cost_mozarela
+        elif cheese_type == "sylygyni":
+            self.base_ingredients.append(self.sylygyni_cheese)
+            self.price += self.cost_sylygyni
+        self.pizza_base = "`Ваша піца:`\n  " + "\n  ".join(self.base_ingredients)
 
     def add(self, index):
         new = True
@@ -222,6 +248,7 @@ class PizzaFromScratch:
         if not self.ingredients:
             result += self.null_text
         else:
+            result += "\n"
             for each in self.ingredients:
                 result += f"  {each}\n"
         result += "\n\n`Ціна:` " + str(self.price) + self._hryvnya
@@ -242,4 +269,5 @@ class PizzaFromScratch:
         return _smol, result, _big
 
     def parse_ingredients(self):
-        return "    " + "\n    ".join([str(i) for i in self.ingredients]) + "\n"
+        _list = self.base_ingredients + self.ingredients
+        return "    " + "\n    ".join([str(i) for i in _list]) + "\n"

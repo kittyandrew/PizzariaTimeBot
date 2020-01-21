@@ -102,7 +102,7 @@ async def init(bot, img_cache, global_bucket):
         await event.respond("Оберіть соус-основу для піци.", buttons=buttons.pizza_basement)
 
     @bot.on(events.NewMessage(pattern=r"Томатний соус|Вершковий соус"))
-    async def pizza_constructor(event: Event):
+    async def pizza_construction(event: Event):
         try:
             basket = global_bucket[str(event.chat_id)]
         except:
@@ -112,9 +112,24 @@ async def init(bot, img_cache, global_bucket):
             basket.set_sauce("tomato")
         elif event.text == "Вершковий соус":
             basket.set_sauce("vershkovii")
+
+        await event.respond("Оберіть сир-основу для піци.", buttons=buttons.pizza_basement_cheese)
+
+    @bot.on(events.NewMessage(pattern=r"сир Моцарелла|сир Сулугуні"))
+    async def middle_constructor(event: Event):
+        try:
+            basket = global_bucket[str(event.chat_id)]
+        except:
+            global_bucket[str(event.chat_id)] = Basket()
+            basket = global_bucket[str(event.chat_id)]
+        if event.text == "сир Моцарелла":
+            basket.set_cheese("mozarella")
+        elif event.text == "сир Сулугуні":
+            basket.set_cheese("sylygyni")
+
         msg1, msg2 = basket.parse_pizza_from_scratch(0)
         await event.respond(msg1)
-        await event.respond(msg2, buttons=buttons.pizza_from_scratch(19, event.chat_id, 1, 0, message_id=event.id))
+        await event.respond(msg2, buttons=buttons.pizza_from_scratch(len(Ingredient.products), event.chat_id, 1, 0, message_id=event.id))
 
     @bot.on(events.NewMessage(func=lambda x: x.text == "↪ Меню"))
     async def _main_menu(event: Event):

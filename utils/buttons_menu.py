@@ -22,7 +22,8 @@ class buttons:
                    Button.text(HalfFourChese.name)],
                [Button.text(HalfPikantna.name),
                    Button.text(HalfFourMeat.name),
-                   Button.text("↪ Меню")]]
+                   Button.text(HalfNapoliPikantna.name)],
+               [Button.text("↪ Меню")]]
 
     @staticmethod
     def products_menu(previous, chat_id, next, curr_index, product_type = None):
@@ -50,6 +51,10 @@ class buttons:
 
     pizza_basement = [Button.text("Томатний соус", resize=True, single_use=True),
                       Button.text("Вершковий соус")]
+
+    pizza_basement_cheese = [Button.text("сир Моцарелла", resize=True, single_use=True),
+                            Button.text("сир Сулугуні")]
+
 
     wait_for_input = Button.force_reply()
 

@@ -1,4 +1,4 @@
-from products.pizzas import PizzaFromScratch
+from products.pizzas import PizzaFromScratch, Ingredient
 from geopy.geocoders import Nominatim
 from geopy.exc import GeocoderTimedOut
 from typing import Union
@@ -26,7 +26,7 @@ class Basket:
     def parse_pizza_from_scratch(self, index):
         result1 = self.pizza_from_scratch.user_parse()
         item, cost = self.pizza_from_scratch.show_item(index)
-        result2 = f"`Вибір інгредієнтів {index + 1}/20`\n"
+        result2 = f"`Вибір інгредієнтів {index + 1}/{len(Ingredient.products)}`\n"
         result2 += f"`Назва:` {item}\n"
         result2 += f"`Ціна:` {cost}"
         return result1, result2
@@ -36,6 +36,9 @@ class Basket:
 
     def set_sauce(self, sauce_type):
         self.pizza_from_scratch.decide_sauce(sauce_type)
+
+    def set_cheese(self, cheese_type):
+        self.pizza_from_scratch.decide_cheese(cheese_type)
 
     def accept_pizza(self):
         self.items.append(self.pizza_from_scratch)

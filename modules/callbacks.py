@@ -81,11 +81,11 @@ async def init(bot, img_cache, global_bucket):
             index = int(data.split("|")[-1])
             msg_id = data.split("|")[-2]
             if index < 0:
-                index = 19
-            elif index > 19:
+                index = 21
+            elif index > 21:
                 index = 0
             item, cost = Ingredient(index).show()
-            msg = f"`Вибір інгредієнтів {index + 1}/20`\n"
+            msg = f"`Вибір інгредієнтів {index + 1}/{len(Ingredient.products)}`\n"
             msg += f"`Назва:` {item}\n"
             msg += f"`Ціна:` {cost}"
             await event.edit(msg,
