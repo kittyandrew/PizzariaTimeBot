@@ -2,7 +2,7 @@ __pycache__/
 .idea/
 *.iml
 *.pyc
-venv/
+.venv/
 testing/
 *.mp3
 *.mp4
