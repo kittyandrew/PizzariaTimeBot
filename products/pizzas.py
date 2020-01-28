@@ -107,42 +107,46 @@ class HalfPizza:
 
 class HalfNizhna(HalfPizza):
     name = "0.5 \"Ніжна\""
-    price = "79₴"
+    price = "87₴"
 
 class HalfSitna(HalfPizza):
     name = "0.5 \"Ситна\""
-    price = "87₴"
+    price = "92₴"
 
 class HalfFourMeat(HalfPizza):
     name = "0.5 \"4 М'яса\""
-    price = "95₴"
+    price = "102₴"
 
 class HalfSokovita(HalfPizza):
     name = "0.5 \"Соковита\""
-    price = "78₴"
+    price = "87₴"
 
 class HalfPikantna(HalfPizza):
     name = "0.5 \"Пікантна\""
-    price = "80₴"
+    price = "88₴"
 
 class HalfApetitna(HalfPizza):
     name = "0.5 \"Апетитна\""
-    price = "80₴"
+    price = "89₴"
 
 class HalfSalyami(HalfPizza):
     name = "0.5 \"Салямі\""
-    price = "80₴"
+    price = "91₴"
 
 class HalfFourChese(HalfPizza):
     name = "0.5 \"4 Сири\""
-    price = "90₴"
+    price = "95₴"
 
 class HalfNapoliPikantna(HalfPizza):
     name = "0.5 \"Наполі пікантна\""
-    price = "85₴"
+    price = "93₴"
+
+class HalfPekelna(HalfPizza):
+    name = "0.5 \"Пекельна\""
+    price = "89₴"
 
 halfs_pizzas = [HalfApetitna, HalfSalyami, HalfSitna, HalfSokovita,
-         HalfFourChese, HalfFourMeat, HalfPikantna, HalfNizhna, HalfNapoliPikantna]
+         HalfFourChese, HalfFourMeat, HalfPikantna, HalfNizhna, HalfNapoliPikantna, HalfPekelna]
 
 class Ingredient:
     _hryvnya = "₴"

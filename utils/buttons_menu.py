@@ -23,7 +23,8 @@ class buttons:
                [Button.text(HalfPikantna.name),
                    Button.text(HalfFourMeat.name),
                    Button.text(HalfNapoliPikantna.name)],
-               [Button.text("↪ Меню")]]
+               [Button.text(HalfPekelna.name),
+                   Button.text("↪ Меню")]]
 
     @staticmethod
     def products_menu(previous, chat_id, next, curr_index, product_type = None):
