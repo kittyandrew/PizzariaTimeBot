@@ -205,8 +205,8 @@ class PizzaFromScratch:
     sylygyni_cheese = "Сулугуні 110 г"
     cost_tomato_sauce = 0.15 * 100
     tomato_sauce = "Томатний соус 100 г"
-    cost_vershkovii_sauce = 0.15 * 100
-    vershkovii_sauce = "Вершковий соус 100 г"
+    cost_vershkovii_sauce = 0.15 * 80
+    vershkovii_sauce = "Вершковий соус 80 г"
     null_text = "\n  `(Додайте інгредієнти..)`"
 
     def __init__(self):
