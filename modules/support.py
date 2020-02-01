@@ -17,6 +17,7 @@ async def init(bot, *args, **kwargs):
             delta = chats[event.chat_id] - time.time()
             if delta > 60:
                 await event.respond(MSG, link_preview=False)
+                chats[event.chat_id] = time.time()
         else:
             chats[event.chat_id] = time.time()
             await event.respond(MSG, link_preview=False)
