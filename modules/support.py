@@ -14,7 +14,7 @@ async def init(bot, *args, **kwargs):
     @bot.on(events.NewMessage(pattern=r"^/support($|@pizzatimebcbot$)"))
     async def support_handler(event):
         if chats.get(event.chat_id, False):
-            delta = chats[event.chat_id] - time.time()
+            delta = time.time() - chats[event.chat_id]
             if delta > 60:
                 await event.respond(MSG, link_preview=False)
                 chats[event.chat_id] = time.time()
