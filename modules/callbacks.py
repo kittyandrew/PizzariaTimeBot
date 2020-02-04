@@ -60,13 +60,13 @@ async def init(bot, img_cache, global_bucket, sales_obj):
 
         if data == "back to main":
             await event.delete()
-            text = "**Головне меню**"
+            text = "**Головне меню**\n\nПерегляньте доступні акції за допомогою команди /offers"
             await event.respond(text, buttons=buttons.main_menu)
         elif "back to main" in data:
             await event.delete()
             _id = data.split("|")[-1]
             await bot.delete_messages(event.chat_id, int(_id) + 1)
-            text = "**Головне меню**"
+            text = "**Головне меню**\n\nПерегляньте доступні акції за допомогою команди /offers"
             await event.respond(text, buttons=buttons.main_menu)
         elif "pizza is ready" in data:
             bucket = global_bucket[data.split("|")[-1]]
@@ -75,7 +75,8 @@ async def init(bot, img_cache, global_bucket, sales_obj):
             await event.delete()
             await bot.delete_messages(event.chat_id, int(msg_id) + 1)
             await event.answer("Товар був доданий до вашого кошика")
-            text = "Піца додана до вашого кошика!\n**Головне меню**"
+            text = "Піца додана до вашого кошика!\n**Головне меню**" \
+                   "\n\nПерегляньте доступні акції за допомогою команди /offers"
             await event.respond(text, buttons=buttons.main_menu)
         elif "i_prev" in data or "i_next" in data:
             index = int(data.split("|")[-1])
