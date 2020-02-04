@@ -65,8 +65,8 @@ class BotSales:
             if discount.was_created:
                 self.discounts["existing"].append(discount)
 
-        vars = self.tmp_discounts.values()
-        keys = self.tmp_discounts.keys()
+        vars = list(self.tmp_discounts.values())
+        keys = list(self.tmp_discounts.keys())
 
         for discount in self.discounts["existing"]:
             if discount in vars:
