@@ -1,6 +1,8 @@
+from utils.sales_func import discounts_job
 from products.pizzas import pizzas_list
 from products.drinks import drinks_list
 from products.sauces import sauces_list
+from my_types.sales import BotSales
 from telethon import TelegramClient
 import config as c
 import modules
@@ -20,14 +22,17 @@ class PizzaBot:
         self.client = TelegramClient(session=f'pizza_bot', api_hash=c.API_HASH, api_id=c.API_ID, loop=self.loop)
         self.img_cache = {}
         self.global_bucket = {}
+        self.sales_obj = BotSales()
+
         self.start()
 
     def start(self):
 
         ## register handlers
-        modules.init(self.client, self.img_cache, self.global_bucket)
+        modules.init(self.client, self.img_cache, self.global_bucket, self.sales_obj)
 
         ## register background events
+        asyncio.ensure_future(discounts_job(self.client, self.sales_obj))
 
         # Start
         self.client.start(bot_token=c.TOKEN)

@@ -51,7 +51,7 @@ async def post_order(bot, basket, user_id, chat):
     # Sending via mail
     server.sendmail(c.LOGIN, c.TARGET, email.as_string())
 
-async def init(bot, img_cache, global_bucket):
+async def init(bot, img_cache, global_bucket, sales_obj):
     @bot.on(events.CallbackQuery)
     async def callback_query(event):
         data:str = event.data.decode("utf-8")

@@ -9,6 +9,7 @@ from telethon.tl.types import User
 from typing import Union
 import logging
 import asyncio
+import re
 Event = Union[Message, events.NewMessage]
 
 lists = {"🍕 Піца": pizzas_list,
@@ -18,13 +19,60 @@ datas = {"🍕 Піца": "pizza",
          "🥤 Напої": "drinks",
          "🍲 Соуси": "sauces"}
 
-async def init(bot, img_cache, global_bucket):
-    @bot.on(events.NewMessage(pattern="^/(start|new)($|@.+)"))
+async def init(bot, img_cache, global_bucket, sales_obj):
+    @bot.on(events.NewMessage(pattern="^/(start|new)($|@pizzatimebcbot$)"))
     async def start_command(event:Event):
         global_bucket[str(event.chat_id)] = Basket()
         main_text = "Привіт, я бот **Pizzatime**! За допомогою мене ви можете оформити замовлення.\n" \
-                    "**Оберіть категорію.**"
+                    "**Оберіть категорію.**\n\nПерегляньте доступні акції за допомогою команди /offers"
         await event.respond(main_text, buttons=buttons.main_menu)
+
+    @bot.on(events.NewMessage(pattern=r"^/offers($|@pizzatimebcbot$)"))
+    async def offers_handler(event:Event):
+        await event.respond(sales_obj.parse(), buttons=buttons.main_menu)
+
+    @bot.on(events.NewMessage(pattern=r"^/new_offer($|@pizzatimebcbot$)"))
+    async def new_offer_handler(event:Event):
+        if sales_obj.admin_detected(event.chat_id):
+            sales_obj.init_buffer(event.chat_id)
+            await event.respond("Створення нової акції.", buttons=buttons.clear)
+            await event.respond("**Введіть назву:**", buttons=buttons.wait_for_input)
+            raise events.StopPropagation()
+
+    @bot.on(events.NewMessage(pattern=r"^/del_offer(|@pizzatimebcbot) .+"))
+    async def del_offer_handler(event: Event):
+        if sales_obj.admin_detected(event.chat_id):
+            sales_obj.add_del_name(re.sub("r^/del_offer(|@pizzatimebcbot)", "", event.text))
+            await event.respond("Акція з такою назвою буде видалена через декілька секунд!")
+            raise events.StopPropagation()
+
+    @bot.on(events.NewMessage(func=lambda x: x.text))
+    async def offer_title_handler(event:Event):
+        if sales_obj.is_status(event.chat_id, "new"):
+            await event.respond("**Введіть текст акції:**\n"
+                                "`Цей текст має надати користувачу уявленя про зміст акції`",
+                                buttons=buttons.wait_for_input)
+            sales_obj.add_discount(event.chat_id, event.text)
+            raise events.StopPropagation()
+
+    @bot.on(events.NewMessage(func=lambda x: x.text))
+    async def offer_text_handler(event:Event):
+        if sales_obj.is_status(event.chat_id, "text"):
+            await event.respond("**Введіть час дії акції:**\n"
+                                "`Необхідний формат:` чч:мм-чч:мм",
+                                buttons=buttons.wait_for_input)
+            sales_obj.set_text(event.chat_id, event.text)
+            raise events.StopPropagation()
+
+    @bot.on(events.NewMessage(func=lambda x: x.text))
+    async def offer_time_handler(event: Event):
+        if sales_obj.is_status(event.chat_id, "time"):
+            await event.respond("**Акція була успішно додана! Зміни можна буде побачити через декілька секунд**",
+                                buttons=buttons.clear)
+            await event.respond("**Головне меню**\n\nДля перегляду доступних акцій введіть /offers",
+                                buttons=buttons.main_menu)
+            sales_obj.set_time(event.chat_id, event.text)
+            raise events.StopPropagation()
 
     @bot.on(events.NewMessage(func=lambda x: x.text in ["🍕 Піца", "🍲 Соуси", "🥤 Напої"]))
     async def pizza_menu(event: Event):
@@ -133,7 +181,7 @@ async def init(bot, img_cache, global_bucket):
 
     @bot.on(events.NewMessage(func=lambda x: x.text == "↪ Меню"))
     async def _main_menu(event: Event):
-        await event.respond("**Головне меню**", buttons=buttons.main_menu)
+        await event.respond("**Головне меню**\n\nДля перегляду доступних акцій введіть /offers", buttons=buttons.main_menu)
 
     @bot.on(events.NewMessage(func=lambda x: any(x.text == item.name for item in halfs_pizzas)))
     async def waiting_part(event: Event):
