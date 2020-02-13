@@ -83,7 +83,7 @@ class PikantnaPizza(BasePizza):
     img_path = os.path.join("media", "pizzas", "Pikantna.png")
 
 class NapoliPikantnaPizza(BasePizza):
-    name = "піца \"Наполі пікантна\""
+    name = "піца \"Наполі\""
     ingredients = ["соус томатний", "сир моцарела", "ковбаса наполі пікантна", "перець болгарський жовтий", "оливки чорні"]
     price = "170₴"
     weight = "610г"
@@ -138,7 +138,7 @@ class HalfFourChese(HalfPizza):
     price = "95₴"
 
 class HalfNapoliPikantna(HalfPizza):
-    name = "0.5 \"Наполі пікантна\""
+    name = "0.5 \"Наполі\""
     price = "93₴"
 
 class HalfPekelna(HalfPizza):
