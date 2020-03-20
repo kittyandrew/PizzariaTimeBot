@@ -4,6 +4,7 @@ from my_types.basic import Basket
 from products.pizzas import *
 from products.drinks import *
 from products.sauces import *
+from products.meals import *
 from telethon import events, Button
 from telethon.tl.types import User
 from typing import Union
@@ -14,10 +15,12 @@ Event = Union[Message, events.NewMessage]
 
 lists = {"🍕 Піца": pizzas_list,
          "🥤 Напої": drinks_list,
-         "🍲 Соуси": sauces_list}
+         "🍲 Соуси": sauces_list,
+         "🍗 Снеки": meals_list}
 datas = {"🍕 Піца": "pizza",
          "🥤 Напої": "drinks",
-         "🍲 Соуси": "sauces"}
+         "🍲 Соуси": "sauces",
+         "🍗 Снеки": "meals"}
 
 async def init(bot, img_cache, global_bucket, sales_obj):
     @bot.on(events.NewMessage(pattern="^/(start|new)($|@pizzatimebcbot$)"))
@@ -74,7 +77,7 @@ async def init(bot, img_cache, global_bucket, sales_obj):
             sales_obj.set_time(event.chat_id, event.text)
             raise events.StopPropagation()
 
-    @bot.on(events.NewMessage(func=lambda x: x.text in ["🍕 Піца", "🍲 Соуси", "🥤 Напої"]))
+    @bot.on(events.NewMessage(func=lambda x: x.text in ["🍕 Піца", "🍲 Соуси", "🥤 Напої", "🍗 Снеки"]))
     async def pizza_menu(event: Event):
         _List = lists[event.text]
         _data = datas[event.text]
@@ -82,9 +85,10 @@ async def init(bot, img_cache, global_bucket, sales_obj):
             await event.respond(_List[0].parse(),
                                 file=img_cache[_List[0].__name__],
                                 buttons=buttons.products_menu(len(_List) - 1, event.chat_id, 1, 0, _data))
-        except KeyError:
-            pass
+        except KeyError as e:
+            print(e)
         except Exception as e:
+
             file = await bot.upload_file(_List[0]().img)
             img_cache[_List[0].__name__] = file
             await event.respond(_List[0].parse(),

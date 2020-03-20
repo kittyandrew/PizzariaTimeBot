@@ -3,7 +3,7 @@ from products.pizzas import *
 
 class buttons:
     main_menu = [[Button.text("🍕 Піца", resize=True, single_use=True), Button.text("🍕 Піца з половинок")],
-                 [Button.text("🍕 Конструктор піци 🍕")],
+                 [Button.text("🍕 Конструктор піци"), Button.text("🍗 Снеки")],
                  [Button.text("🍲 Соуси"), Button.text("🥤 Напої")],
                  [Button.text("🛒 Перевірити кошик"), Button.text("📋 Оформити замовлення")],
                  [Button.text("📩 Контактна інформація")]]

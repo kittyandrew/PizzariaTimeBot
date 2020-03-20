@@ -2,6 +2,7 @@ from utils.sales_func import discounts_job
 from products.pizzas import pizzas_list
 from products.drinks import drinks_list
 from products.sauces import sauces_list
+from products.meals import meals_list
 from my_types.sales import BotSales
 from telethon import TelegramClient
 import config as c
@@ -43,7 +44,7 @@ class PizzaBot:
 
     async def cache_imgs(self):
         print("Start caching imgs..")
-        _list = [*pizzas_list, *drinks_list, *sauces_list]
+        _list = [*pizzas_list, *drinks_list, *sauces_list, *meals_list]
         for each in _list:
             file = await self.client.upload_file(each().img)
             self.img_cache[each.__name__] = file

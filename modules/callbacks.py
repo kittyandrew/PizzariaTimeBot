@@ -3,6 +3,7 @@ from my_types.basic import Basket, Counter
 from products.pizzas import *
 from products.drinks import *
 from products.sauces import *
+from products.meals import *
 from telethon import events, Button
 import config as c
 import logging
@@ -13,7 +14,8 @@ from email.mime.text import MIMEText
 
 lists = {"pizza": pizzas_list,
          "drinks": drinks_list,
-         "sauces": sauces_list}
+         "sauces": sauces_list,
+         "meals": meals_list}
 
 counter = Counter()
 
@@ -109,17 +111,20 @@ async def init(bot, img_cache, global_bucket, sales_obj):
                                                                 message_id=_msg_id))
         elif "previous" in data or "next" in data:
             index = int(data.split("|")[-1])
+            #print("Try #", index, end=" ")
             if index < 0:
                 index = len(_List) - 1
             elif index >= len(_List):
                 index = 0
             product_type = data.split("|")[0]
+            #print(product_type, end=" ")
+            #print(index)
             try:
                 await event.edit(_List[index].parse(),
                                  file=img_cache[_List[index].__name__],
                                  buttons=buttons.products_menu(index - 1, event.chat_id, index + 1, index, product_type))
-            except KeyError:
-                pass
+            #except KeyError as e:
+            #    pass
             except Exception as e:
                 await event.edit(_List[index].parse(),
                                  file=_List[index]().img,
