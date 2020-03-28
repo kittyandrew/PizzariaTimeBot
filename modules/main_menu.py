@@ -143,7 +143,7 @@ async def init(bot, img_cache, global_bucket, sales_obj):
     async def half_pizzas(event: Event):
         await event.respond("Оберіть дві половинки:", buttons=buttons.halfs_menu())
 
-    @bot.on(events.NewMessage(func=lambda x: x.text == "🍕 Конструктор піци 🍕"))
+    @bot.on(events.NewMessage(func=lambda x: x.text == "🍕 Конструктор піци"))
     async def pizza_constructor(event: Event):
         try:
             basket = global_bucket[str(event.chat_id)]
