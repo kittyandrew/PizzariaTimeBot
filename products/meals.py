@@ -47,7 +47,7 @@ class MeatStripes9(MealBase):
 
 class SpicyPotato(MealBase):
     name = "Картопля зі спеціями"
-    price = "42₴"
+    price = "53₴"
     weight = "300г"
     img_path = os.path.join("media", "meals", "spicy_potatoes.png")
 

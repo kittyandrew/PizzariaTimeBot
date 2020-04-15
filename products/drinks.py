@@ -31,22 +31,29 @@ class Pepsi(BaseDrink):
     price = "25₴"
     img_path = os.path.join("media", "drinks", "Pepsi.jpg")
 
-class SandoraOrange(BaseDrink):
-    name = "Сік апельсиновий SANDORA"
+class SadochokMultifrukt(BaseDrink):
+    name = "Сік Садочок мультифрукт"
     size = "1Л"
-    price = "35₴"
-    img_path = os.path.join("media", "drinks", "SandoraOrange.jpg")
+    price = "28₴"
+    img_path = os.path.join("media", "drinks", "SadochokMultifruit.jpg")
 
-class SandoraMultivit(BaseDrink):
-    name = "Сік мультивітамін SANDORA"
+class SadochokMultivit(BaseDrink):
+    name = "Сік Садочок мультивітамін"
     size = "1Л"
-    price = "35₴"
-    img_path = os.path.join("media", "drinks", "SandoraMultivit.jpg")
+    price = "28₴"
+    img_path = os.path.join("media", "drinks", "SadochokMultivitamin.jpg")
 
-class SandoraCherry(BaseDrink):
-    name = "Сік вишневий SANDORA"
+class SadochokAppleGrape(BaseDrink):
+    name = "Сік Садочок яблучно-виноградний"
     size = "1Л"
-    price = "35₴"
-    img_path = os.path.join("media", "drinks", "SandoraCherry.jpg")
+    price = "28₴"
+    img_path = os.path.join("media", "drinks", "SadochokAppleGrapes.jpg")
 
-drinks_list = [Cocacola, Pepsi, SandoraOrange, SandoraMultivit, SandoraCherry]
+class SadochokGranatApple(BaseDrink):
+    name = "Сік Садочок гранатово-яблучний"
+    size = "1Л"
+    price = "28₴"
+    img_path = os.path.join("media", "drinks", "SadochokGranatApple.jpg")
+
+
+drinks_list = [Cocacola, Pepsi, SadochokMultifrukt, SadochokMultivit, SadochokAppleGrape, SadochokGranatApple]
